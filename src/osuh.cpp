@@ -80,9 +80,9 @@ bool init() {
 
     head.setTexture(data::load_texture("img/osuh/head.png"));
 
-    draw_hand.setTexture(data::load_texture("img/osuh/draw2.png"));
-    draw_hand.setScale(0.65f, 0.65f);
-    draw_hand.setOrigin(57.5f, 90.0f);
+    draw_hand.setTexture(data::load_texture("img/osuh/hand.png"));
+    draw_hand.setScale(0.55f, 0.55f);
+    draw_hand.setOrigin(57.5f, 300.0f);
 
     return true;
 }
@@ -114,8 +114,8 @@ void draw() {
     device.setPosition(mpos0 + dx + offset_x, mpos1 + dy + offset_y);
     window.draw(device);
 
-    double draw_hand_x = mpos0 + 0;
-    double draw_hand_y = mpos1 + 0;
+    double draw_hand_x = mpos0 + 40;
+    double draw_hand_y = mpos1 + -30;
 
     double draw_hand_vec_x = 300 - draw_hand_x;
     double draw_hand_vec_y = 150 - draw_hand_y;
@@ -127,7 +127,7 @@ void draw() {
     draw_hand.setPosition(draw_hand_x, draw_hand_y);
     window.draw(draw_hand);
 
-    // draw head
+    // draw head so it covers the arm
     window.draw(head);
 
     // drawing keypresses
