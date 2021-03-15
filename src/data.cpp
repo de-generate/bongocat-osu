@@ -72,6 +72,14 @@ void create_config() {
         "pawEdge": [0, 0, 0],
         "keyContainers": []
     },
+    "osuh": {
+        "mouse": false,
+        "toggleSmoke": false,
+        "key1": [90],
+        "key2": [88],
+        "smoke": [67],
+        "wave": [86]
+    },
     "mousePaw": {
         "mousePawComment": "coordinates start in the top left of the window",
         "pawStartingPoint": [211, 159],
@@ -193,6 +201,8 @@ bool init() {
         return mania::init();
     case 5:
         return custom::init();
+    case 6:
+        return osuh::init();
     default:
         error_msg("Mode value is not correct", "Error reading configs");
         return false;

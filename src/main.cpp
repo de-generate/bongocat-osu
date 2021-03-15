@@ -1,3 +1,4 @@
+#include <wa/workaround.c>
 #include "header.hpp"
 
 #if !defined(__unix__) && !defined(__unix)
@@ -83,6 +84,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
             break;
         case 5:
             custom::draw();
+            break;
+        case 6:
+            osuh::draw();
         }
 
         if (is_show_input_debug) {

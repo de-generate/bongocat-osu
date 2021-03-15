@@ -1,4 +1,11 @@
 # Description
+My fork of the osu! Bongo Cat overlay by [kuroni](https://github.com/kuroni).
+
+I added a new mode (6). It is similar to the osu mode (1) but uses a custom png instead of the paw and will maybe let you add more keyboard interactions or something in the future.
+
+Because I'm lazy I will just leave the original description for now. However, I'm not sure if the build instructions will work right now since I had to use a dirty workaround for a linker issue I had. If the build fails try removing the `include/wa` directory and removing the line `#include <wa/workaround.c>` from `main.cpp`.
+
+# Original Description
 An osu! Bongo Cat overlay with smooth paw movement and simple skinning ability, written in C++.
 
 You can find how to configure the application in our [wiki](https://github.com/kuroni/bongocat-osu/wiki/Settings).

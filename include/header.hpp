@@ -77,3 +77,9 @@ bool init();
 
 void draw();
 }; // namespace custom
+
+namespace osuh {
+    bool init();
+
+    void draw();
+} // namespace draw
