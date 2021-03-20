@@ -4,9 +4,9 @@
 Makefile
 bongo
 NOTE
-config.json
 bin
 obj
 img/osuh/*
 include/SFML
 .vscode
+tmp
