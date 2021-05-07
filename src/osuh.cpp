@@ -7,8 +7,13 @@ int paw_r, paw_g, paw_b, paw_a;
 int paw_edge_r, paw_edge_g, paw_edge_b, paw_edge_a;
 double scale;
 bool is_mouse, is_left_handed, is_enable_toggle_smoke;
-sf::Sprite bg, up, left, right, device, smoke, wave;
-sf::Sprite draw_hand, head;
+sf::Sprite bg, up, left, right, device, smoke, wave, hand, head;
+sf::CircleShape test_dot;
+
+const float rad_to_deg = 180.0f / 3.141592f;
+
+// font for debug text
+sf::Font font;
 
 int key_state = 0;
 
@@ -80,9 +85,13 @@ bool init() {
 
     head.setTexture(data::load_texture("img/osuh/head.png"));
 
-    draw_hand.setTexture(data::load_texture("img/osuh/hand.png"));
-    draw_hand.setScale(0.55f, 0.55f);
-    draw_hand.setOrigin(57.5f, 300.0f);
+    hand.setTexture(data::load_texture("img/osuh/hand.png"));
+    hand.setScale(0.55f, 0.55f);
+    hand.setOrigin(57.5f, 300.0f);
+
+
+   font.loadFromFile("font/RobotoMono-Bold.ttf");
+
 
     return true;
 }
@@ -90,45 +99,47 @@ bool init() {
 void draw() {
     window.draw(bg);
 
-    Json::Value paw_draw_info = data::cfg["mousePaw"];
-    int x_paw_start = paw_draw_info["pawStartingPoint"][0].asInt();
-    int y_paw_start = paw_draw_info["pawStartingPoint"][1].asInt();
-    auto [x, y] = input::get_xy();
+    auto [mx, my] = input::get_xy();
 
-    double dist = hypot(x_paw_start - x, y_paw_start - y);
-    double centreleft0 = x_paw_start - 0.7237 * dist / 2;
-    double centreleft1 = y_paw_start + 0.69 * dist / 2;
+    float x = mx;
+    float y = my - 50;
 
-    double a = y - centreleft1;
-    double b = centreleft0 - x;
-    double le = hypot(a, b);
-    a = x + a / le * 60;
-    b = y + b / le * 60;
+    float hand_x = x;
+    float hand_y = y;
 
-    double mpos0 = (a + x) / 2 - 52 - 15;
-    double mpos1 = (b + y) / 2 - 34 + 5;
-    double dx = -38;
-    double dy = -50;
+    float hand_vec_x = 300 - hand_x;
+    float hand_vec_y = 165 - hand_y;
 
-    // drawing mouse/tablet
-    device.setPosition(mpos0 + dx + offset_x, mpos1 + dy + offset_y);
+    float alpha = (-hand_vec_y) / sqrt(hand_vec_x * hand_vec_x + hand_vec_y * hand_vec_y);
+    float hand_angle = acos(alpha) * rad_to_deg;
+
+
+    float device_x = x - 40;
+    float device_y = y - 50;
+
+
+    // setting hand position/rotation
+    hand.setRotation(hand_angle);
+    hand.setPosition(hand_x, hand_y);
+
+    // setting device position
+    device.setPosition(device_x, device_y);
+
+    // drawing device/hand
     window.draw(device);
-
-    double draw_hand_x = mpos0 + 40;
-    double draw_hand_y = mpos1 + -30;
-
-    double draw_hand_vec_x = 300 - draw_hand_x;
-    double draw_hand_vec_y = 150 - draw_hand_y;
-
-    double alpha = (-draw_hand_vec_y)/(sqrt(pow(draw_hand_vec_x, 2) + pow(draw_hand_vec_y, 2)));
-    double draw_hand_angle = acos(alpha) * 180.0f / 3.141592f;
-
-    draw_hand.setRotation(draw_hand_angle + 10);
-    draw_hand.setPosition(draw_hand_x, draw_hand_y);
-    window.draw(draw_hand);
-
-    // draw head so it covers the arm
+    window.draw(hand);
+    
+    // draw head here so it covers the arm
     window.draw(head);
+
+
+    sf::Text debug_text("x=" + std::to_string(x) + "  y=" + std::to_string(y), font);
+    debug_text.setCharacterSize(14);
+    debug_text.setColor(sf::Color::Black);
+    debug_text.setPosition(100,50);
+    window.draw(debug_text);
+
+
 
     // drawing keypresses
     bool left_key = false;
