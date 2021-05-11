@@ -10,10 +10,30 @@ bool is_mouse, is_left_handed, is_enable_toggle_smoke;
 sf::Sprite bg, up, left, right, device, smoke, wave, hand, head;
 sf::CircleShape test_dot;
 
-const float rad_to_deg = 180.0f / 3.141592f;
+sf::Font debugFont;
+sf::Text debugText;
 
-// font for debug text
-sf::Font font;
+const float rad_to_deg = 180.0f / 3.141592f;
+const float deg_to_rad = 3.141592f / 180.0f;
+
+const float rot_angle = -20.0f * deg_to_rad;
+const float sin_rot_angle = sin(rot_angle);
+const float cos_rot_angle = cos(rot_angle);
+
+const float off_x = -10;
+const float off_y = -70;
+const float off_scale_x = 0.4f;
+const float off_scale_y = 0.4f;
+
+float p1_x = 131;
+float p1_y = 208;
+float p2_x = 184;
+float p2_y = 324;
+
+float mid_x = 0.0f;
+float mid_y = 0.0f;
+
+float test = 0;
 
 int key_state = 0;
 
@@ -89,9 +109,19 @@ bool init() {
     hand.setScale(0.55f, 0.55f);
     hand.setOrigin(57.5f, 300.0f);
 
+    test_dot.setOutlineColor(sf::Color::Red);
+    test_dot.setFillColor(sf::Color::Red);
+    test_dot.setRadius(3);
+    test_dot.setOutlineThickness(2);
 
-   font.loadFromFile("font/RobotoMono-Bold.ttf");
+    debugFont.loadFromFile("font/RobotoMono-Bold.ttf");
+    debugText.setCharacterSize(14);
+    debugText.setFont(debugFont);
+    debugText.setColor(sf::Color::Black);
+    debugText.setPosition(100,50);
 
+    mid_x = 0.5f * (p2_x - p1_x) + p1_x + off_x;
+    mid_y = 0.5f * (p2_y - p1_y) + p1_y + off_y;
 
     return true;
 }
@@ -101,8 +131,14 @@ void draw() {
 
     auto [mx, my] = input::get_xy();
 
-    float x = mx;
-    float y = my - 50;
+    float r_x = (mx + off_x) - mid_x;
+    float r_y = (my + off_y) - mid_y;
+
+    float p_x = r_x * cos_rot_angle - r_y * sin_rot_angle;
+    float p_y = r_x * sin_rot_angle + r_y * cos_rot_angle;
+
+    float x = off_scale_x * p_x + mid_x;
+    float y = off_scale_y * p_y + mid_y;
 
     float hand_x = x;
     float hand_y = y;
@@ -132,13 +168,11 @@ void draw() {
     // draw head here so it covers the arm
     window.draw(head);
 
+    test_dot.setPosition(x, y);
+    window.draw(test_dot);
 
-    sf::Text debug_text("x=" + std::to_string(x) + "  y=" + std::to_string(y), font);
-    debug_text.setCharacterSize(14);
-    debug_text.setColor(sf::Color::Black);
-    debug_text.setPosition(100,50);
-    window.draw(debug_text);
-
+    debugText.setString("x=" + std::to_string(x) + "  y=" + std::to_string(y));
+    window.draw(debugText);
 
 
     // drawing keypresses
